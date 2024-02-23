@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load compress %}
+
+{% block customcss %}
+<link href="{% static 'css/userDashboard.css' %}" rel="stylesheet">
+<link href="{% static 'css/signin_style.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+<link href="{% static 'css/chat-style.css' %}" rel="stylesheet">
+{% endblock customcss %}
+
+{% block content %}
+
+<section>
+  <a href="#"><img src="{% static 'images/chat_icon.webp' %}" class="chat-img"></a>
+  <div class="full-body">
+    <div class="left-body">
+      <div class="dashboards-div">
+        <div class="calorie-bar-chart-div">
+
+          <!-- BAR CHART START -->
+          <div id="bar-chart-container-div"></div>
+          <!-- BAR CHART END -->
+        </div>
+        <div class="metrics-div">
+          <div class="metric-div">
+
+            <div class="metric-title-div">Calories burned today</div>
+            <div class="metric-content-div">{{calories_burnt_today}} KCal
+            </div>
+          </div>
+          <div class="metric-div">
+            <div class="metric-title-div">Calories burned in last 7 days</div>
+            <div class="metric-content-div">
+              {{calories_burnt_last_week_int}} KCal
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sleep-meal-container container-fluid">
+        <div class="sleep-container">
+          <div class="sleep-title">Sleep tracker</div>
+          <div class="sleep-circle">
+          </div>
+          <div class="sleep-content">7 out of 8 hrs sleep.</div>
+        </div>
+        <div class="meal-container">
+          <div class="meal-title">Meal tracker</div>
+          <div class="meal-content">
+            <div class="meal-carbs-center"></div>
+            <div class="meal-sub-content">20 Carbs out of the 25 daily recommended</div>
+          </div>
+          <div class="meal-content">
+            <div class="meal-fat-center"></div>
+            <div class="meal-sub-content align-items-center">15 Fats out of the 25 daily recommended</div>
+          </div>
+
+          <div class="meal-content">
+            <div class="meal-protein-center"></div>
+            <div class="meal-sub-content">25 Proteins out of the 25 daily recommended</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+    <div class="right-body">
+      <div class="user-image-div">
+        <img src="{% static 'images/img_user_profile.png' %}" alt="User profile photo" class="user-profile-image">
+        <div class="user-info-div">
+          <span style="font-size:2rem">{{name}}</span></br>
+          <span style="font-size:1rem">Age: {{age}}</span></br>
+          <span style="font-size:1rem">Weight: {{weight}} kgs</span></br>
+        </div>
+      </div>
+      <div class="events-div">
+
+        <div id="upcoming-events">Upcoming workouts</div>
+        <div class="events-container">
+          {% for item in workouts_assigned_today %}
+          <!-- <h3 style = "color:black;">  item id :: {{item.id}} </h3>  -->
+
+          <div class="single-event">
+            <div class="single-event-left">
+              <!-- Time is static -->
+
+              <span class="event-time">7:00 AM</span>
+              <span class="event-date">{{ item.date_assigned }}</span>
+            </div>
+            <div class="single-event-partition"></div>
+            <div class="single-event-right">
+              <a href = "{% url 'view_workouts' item.id %}">
+
+              <span class="single-event-title"><b>{{ item.workout.title }}</b></span>
+              <span class="single-event-desc">{{ item.workout.description }}</span>
+            </div>
+
+          </div>
+
+          {% endfor %}
+</section>
+
+<br><br><br>
+</div>
+<div class="chat-icon" id="chat-icon">
+  <i class="fas fa-comments"></i>
+</div>
+
+<div class="chatbot-container" id="chatbot-container">
+  <div class="chatbot-header">
+    <h3>Healthtrack365 Chat Support</h3>
+    <button class="close-btn">&times;</button>
+  </div>
+  <div class="chatbot-body">
+    <p>Welcome to the chat service! Select an option:</p>
+    <div class="form-group">
+    </div>
+    <form method="post" action="{% url 'chat:room_detail' 'general' %}">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <button type="submit" class="btn btn-primary">Chat with Your Trainer</button><br><br>
+    </form>
+    <form method="post" action="{% url 'chat:room_detail' 'support' %}">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <button type="submit" class="btn btn-warning">Chat with Support</button>
+      <br><br>
+    </form>
+    <form method="post" action="{% url 'chat:room_detail' 'faq' %}">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <button type="submit" class="btn btn-info">FAQs</button><br><br>
+    </form>
+  </div>
+</div>
+<div class="chat-overlay" id="chat-overlay"></div>
+
+<br><br>
+
+
+
+{% endblock content %}
+
+{% block inline_javascript %}
+<script>
+  window.onload = function () {
+    var cal_burnt = "{{calories_burnt_last_week_dict}}"
+    cal_burnt = cal_burnt.slice(1, cal_burnt.length - 1)
+    cal_burnt_arr = cal_burnt.split(" ").map(parseFloat);
+    const today = new Date();
+    // Map the weekday number to its corresponding name
+    const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    CanvasJS.addColorSet("greenShades",
+      [//colorSet Array
+
+        "#007bff",
+        "#007bff",
+        "#007bff",
+        "#007bff",
+        "#007bff",
+        "#007bff",
+        "#007bff"
+      ]);
+
+    // Construct options first and then pass it as a parameter
+    var options1 = {
+      animationEnabled: true,
+      title: {
+        text: "Calories burned in last 7 days"
+      },
+      colorSet: "greenShades",
+      axisX: {
+        tickThickness: 0,
+        gridThickness: 0,
+        tickLength: 0
+      },
+      axisY: {
+        tickThickness: 0,
+        gridThickness: 0,
+        tickLength: 0
+      },
+      data: [{
+        type: "column",
+        fillOpacity: .8,
+        showInLegend: false,
+        // TO-DO: Need to get data points from back-end
+        dataPoints: [
+          { y: cal_burnt_arr[0], label: weekdays[new Date(today.getFullYear(), today.getMonth(), today.getDate() - 6).getDay()] },
+          { y: cal_burnt_arr[1], label: weekdays[new Date(today.getFullYear(), today.getMonth(), today.getDate() - 5).getDay()] },
+          { y: cal_burnt_arr[2], label: weekdays[new Date(today.getFullYear(), today.getMonth(), today.getDate() - 4).getDay()] },
+          { y: cal_burnt_arr[3], label: weekdays[new Date(today.getFullYear(), today.getMonth(), today.getDate() - 3).getDay()] },
+          { y: cal_burnt_arr[4], label: weekdays[new Date(today.getFullYear(), today.getMonth(), today.getDate() - 2).getDay()] },
+          { y: cal_burnt_arr[5], label: weekdays[new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1).getDay()] },
+          { y: cal_burnt_arr[6], label: weekdays[new Date(today.getFullYear(), today.getMonth(), today.getDate() - 0).getDay()] }
+        ]
+      }]
+    };
+
+    $(".calorie-bar-chart-div").resizable({
+      create: function (event, ui) {
+        $("#bar-chart-container-div").CanvasJSChart(options1);
+      },
+      resize: function (event, ui) {
+        $("#bar-chart-container-div").CanvasJSChart().render();
+      }
+    });
+
+  }
+  $('.sleep-circle').circleProgress({
+    value: 0.75,
+    size: 150,
+    fill: {
+      gradient: ["blue", "purple"]
+    },
+    thickness: 20
+  });
+
+
+  $('.meal-carbs-center').circleProgress({
+    value: 0.75,
+    size: 70,
+    fill: {
+      gradient: ["blue", "purple"]
+    },
+    thickness: 10
+  });
+
+  $('.meal-fat-center').circleProgress({
+    value: 0.75,
+    size: 70,
+    fill: {
+      gradient: ["blue", "purple"]
+    },
+    thickness: 10
+  });
+
+  $('.meal-protein-center').circleProgress({
+    value: 0.75,
+    size: 70,
+    fill: {
+      gradient: ["blue", "purple"]
+    },
+    thickness: 10
+  });
+</script>
+<script>
+  const chatIcon = document.getElementById('chat-icon');
+  const chatbotContainer = document.getElementById('chatbot-container');
+  const chatOverlay = document.getElementById('chat-overlay');
+  const closeBtn = chatbotContainer.querySelector('.close-btn');
+
+
+  // Show the chatbot container and overlay when the chat icon is clicked
+  chatIcon.addEventListener('click', function () {
+    chatbotContainer.style.display = 'block';
+    chatOverlay.style.display = 'block';
+  });
+
+  // Hide the chatbot container and overlay when the close button is clicked
+  closeBtn.addEventListener('click', function () {
+    chatbotContainer.style.display = 'none';
+    chatOverlay.style.display = 'none';
+  });
+
+  // Hide the chatbot container and overlay when the overlay is clicked outside the container
+  chatOverlay.addEventListener('click', function (event) {
+    if (event.target === chatOverlay) {
+      chatbotContainer.style.display = 'none';
+      chatOverlay.style.display = 'none';
+    }
+  });
+
+</script>
+
+{% endblock inline_javascript %}

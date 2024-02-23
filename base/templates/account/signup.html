@@ -1,0 +1,58 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load compress %}
+
+{% block head_title %}{% translate "Signup" %}{% endblock %}
+
+
+{% block customcss %}
+<link href="{% static 'css/registration.css' %}" rel="stylesheet">
+{% endblock customcss %}
+
+
+{% block inner %}
+<h1>{% translate "Sign Up" %}</h1>
+<body>
+<section class="vh-70">
+  <div class="container py-5 vh-70">
+    <div class="row d-flex align-items-center justify-content-center h-50">
+      <div class="col-md-8 col-lg-7 col-xl-6">
+        <img src="{% static 'images/trainer.jpeg' %}" class="img-fluid"
+             alt="image">
+      </div>
+      <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
+        <form class="signup" id="signup_form" method="post"
+              action="{% url 'account_signup' %}">
+          {% csrf_token %}
+          {{ form|crispy }}
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}"
+                 value="{{ redirect_field_value }}" />
+          {% endif %}
+          <button class="btn btn-primary" type="submit">{% translate "Sign Up" %} &raquo;
+          </button>
+        </form>
+      </div>
+      <div class="col-md-8 col-lg-6 col-xl-6 offset-xl-8">
+        <p>
+          {% blocktranslate %}
+          Already have an account? Then please <a href="{{ login_url }}">signin</a>.
+          {% endblocktranslate %}
+        </p>
+      </div>
+    </div>
+  </div>
+
+</section>
+<body>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+{% endblock %}

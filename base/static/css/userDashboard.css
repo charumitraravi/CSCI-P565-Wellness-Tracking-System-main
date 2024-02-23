@@ -1,0 +1,398 @@
+/*
+
+  REFERENCES:
+  1. https://canvasjs.com/html5-javascript-bar-chart/
+  2. https://codepen.io/JMChristensen/pen/AGbeEy
+
+ */
+html,
+body {
+  height: 100%;
+  /* display: flex;
+    flex-direction: column; */
+  padding-top: 40px;
+}
+
+.full-body {
+  display: flex;
+  /* background-color: blue; */
+  height: 100%;
+  overflow: scroll;
+  /* flex: 0 1 auto; */
+}
+
+.left-body {
+  /* background-color: aqua; */
+  height: 100%;
+  width: 70%;
+  overflow: scroll;
+}
+
+.right-body {
+  background-color: #d2d3d6;
+  height: 100%;
+  width: 30%;
+  color: #fff;
+}
+
+.user-image-div {
+  height: 40%;
+  text-align: center;
+}
+
+.user-info-div {
+  text-align: center;
+}
+
+.user-profile-image {
+  border-radius: 100%;
+  height: 40%;
+  padding: 1rem;
+}
+
+.events-div {
+  height: 60%;
+  background-color: #6a717f;
+  display: flex;
+  flex-flow: column;
+}
+
+.dashboards-div {
+  display: flex;
+  height: 60%;
+  /* background-color: #90e0ef; */
+  padding: 2rem;
+  /* border-style: solid; */
+  /* border-width: 0 0 1rem 0;
+    border-color: #90e0ef; */
+}
+
+.calorie-bar-chart-div {
+  height: 100%;
+  width: 70%;
+  margin-right: 2rem;
+  background-color: #99dcf2;
+}
+
+.metrics-div {
+  width: 30%;
+}
+
+/* border: 1px solid #6c6c72;
+border-radius: 20px;
+background-color: rgba(235, 237, 240, 0.5); */
+
+.metric-div {
+  height: 45%;
+  background-color: rgba(235, 237, 240, 0.5);
+  margin-top: 4%;
+  margin-bottom: 4%;
+  border-radius: 2rem;
+  padding: 4%;
+  border: 1px solid #6c6c72;
+  color: #6c6c72;
+}
+
+.metric-title-div {
+  font-size: 2rem;
+  text-align: center;
+}
+
+.metric-cal-img-div {
+  text-align: right;
+  width: 30%;
+}
+
+.metric-content-div {
+  height: 60%;
+  width: 100%;
+  line-height: 60%;
+  font-size: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
+
+.classes-container-div {
+  padding: 2rem;
+}
+
+.active-classes-title-div {
+  font-size: 2.5rem;
+}
+
+.active-classes-container-div {
+  display: flex;
+  max-width: 50%;
+}
+
+.active-class-div {
+  height: 10rem;
+  width: 100%;
+  background-color: #ffffff;
+  display: flex;
+  margin: 2rem;
+  border-radius: 1rem;
+  /* border-style: ; */
+  box-shadow: 3px 3px 5px 5px #bab7b7;
+}
+
+
+.class-progress-circle {
+  max-width: 50%;
+}
+
+
+#bar-chart-container-div {
+  width: 100%;
+  height: 100%;
+  border-style: solid;
+  /* border-width: 1rem; */
+  border-color: #007bff;
+  /* border-radius: 2px; */
+}
+
+#upcoming-events {
+  font-size: 2rem;
+  text-align: center;
+  padding: 1rem;
+  flex: 0 1 auto;
+  color: #fff;
+}
+
+.events-container {
+  flex: 1 1 auto;
+  overflow: scroll;
+}
+
+.single-event {
+  display: flex;
+  flex-flow: row;
+  background-color: #fff;
+  height: 5rem;
+  margin: 1.5rem;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+
+.single-event-left {
+  min-width: 20%;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+}
+
+.single-event-partition {
+  min-width: 0.2rem;
+  background-color: #007bff;
+}
+
+.single-event-right {
+  flex: 1 1 auto;
+  display: flex;
+  flex-flow: column;
+  overflow: hidden;
+}
+
+.event-time {
+  text-align: right;
+  padding-right: 1rem;
+  font-size: 1rem;
+  color: #007bff;
+}
+
+.event-date {
+  text-align: right;
+  padding-right: 1rem;
+  font-size: 0.8rem;
+  color: #000000;
+}
+
+.single-event-title {
+  text-align: left;
+  padding-left: 1rem;
+  font-size: 1rem;
+  color: #000;
+}
+
+.single-event-inst {
+  text-align: left;
+  padding-left: 1rem;
+  font-size: 1rem;
+  color: #6c6c72;
+}
+
+.single-event-desc {
+  text-align: left;
+  padding-left: 1rem;
+  font-size: 0.8rem;
+  color: #000;
+}
+
+.chat-div {
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+  position: relative;
+}
+
+.chat-div:hover {
+  background-color: #3e8e41;
+}
+
+.chat-icon {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: #fff;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 9999;
+}
+
+.chat-icon i {
+  font-size: 24px;
+}
+
+.chatbot-container {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 350px;
+  height: 350px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  display: none;
+  z-index: 9998;
+}
+
+.chatbot-container .chatbot-header {
+  background-color: #007bff;
+  padding: 10px;
+  border-radius: 5px 5px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+}
+
+.chatbot-container .chatbot-header .close-btn {
+  background-color: transparent;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+  color: #fff;
+}
+
+.chatbot-container .chatbot-header .close-btn:hover {
+  color: #ccc;
+}
+
+.chatbot-container .chatbot-body {
+  padding: 10px;
+  height: calc(100% - 50px);
+  overflow-y: auto;
+}
+
+.chat-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9997;
+  display: none;
+}
+
+.sleep-container {
+  width: 50%;
+  display: flex;
+  flex-flow: column;
+  margin: 1rem;
+  border: 1px solid #6c6c72;
+  border-radius: 20px;
+  background-color: rgba(235, 237, 240, 0.5);
+}
+
+.meal-container {
+  width: 50%;
+  display: flex;
+  flex-flow: column;
+  margin: 1rem;
+  border: 1px solid #6c6c72;
+  border-radius: 20px;
+  background-color: rgba(235, 237, 240, 0.5);
+}
+
+.sleep-meal-container {
+  display: flex;
+  flex-flow: row;
+  height: 40%;
+}
+
+.sleep-title,
+.meal-title {
+  text-align: center;
+  font-size: 2rem;
+}
+
+.sleep-circle {
+  text-align: center;
+  padding-top: 2rem;
+  padding-bottom: 0.5rem;
+}
+
+.sleep-content {
+  text-align: center;
+}
+
+.meal-content {
+  display: flex;
+  flex-flow: row;
+  padding: 0.5rem;
+}
+
+.meal-sub-content {
+  display: flex;
+  align-items: center;
+  padding-left: 2rem;
+}
+
+.meal-carbs-center,
+.meal-fat-center,
+.meal-protein-center {
+  padding-left: 1rem;
+}
+
+.parent {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.chat-img {
+  /* position: fixed;
+    overflow: visible;
+    display: inline-block; */
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  width: 70px;
+}

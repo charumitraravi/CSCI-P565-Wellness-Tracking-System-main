@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load compress %}
+
+
+{% block title %}User: {{ object.username }}{% endblock %}
+
+
+{% block customcss %}
+<link href="{% static 'css/error403.css' %}" rel="stylesheet">
+<link href="{% static 'css/chat-style.css' %}" rel="stylesheet">
+{% endblock customcss %}
+
+{% block content %}
+<div class="container">
+  <br><br><br>
+
+  <div class="row">
+    <div class="col-sm-12">
+
+      <h2> Username: {{ object.username }}</h2>
+      {% if object.name %}
+        <p>{{ object.name }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+{% if object == request.user %}
+<br><br>
+
+<section class="vh-70">
+  <div class="container py-5 h-70">
+    <div class="row d-flex align-items-center justify-content-center h-50">
+      <div class="col-md-8 col-lg-7 col-xl-6">
+        <img src="{% static 'images/workout-stay.gif' %} "
+        class="img-fluid" alt="image" width="500px" height="200px">
+      </div>
+      <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
+        <a class="btn btn-primary" href="{% url 'user:update' %}" role="button">My Info</a><br><br>
+        <a class="btn btn-primary" href="{% url 'account_email' %}" role="button">E-Mail</a><br><br>
+        <a class="btn btn-primary" href="{% url 'redirectLoggedInUser' %}" role="button">Dashboard</a><br><br>
+        <a class="btn btn-primary" href="{% url 'home' %}" role="button">Start Your Journey</a><br><br>
+          </div>
+  </div>
+  </div>
+
+</section>
+
+
+<!-- End Action buttons -->
+{% endif %}
+</div>
+
+
+
+<div class="chat-icon" id="chat-icon">
+    <i class="fas fa-comments"></i>
+</div>
+
+<div class="chatbot-container" id="chatbot-container">
+  <div class="chatbot-header">
+    <h3>Healthtrack365 Chat Support</h3>
+    <button class="close-btn">&times;</button>
+  </div>
+  <div class="chatbot-body">
+    <p>Welcome to the chat service! Select an option:</p>
+      <div class="form-group">
+      </div>
+      <form method="post" action="{% url 'chat:room_detail' 'general' %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Chat with Your Trainer</button><br><br>
+      </form>
+      <form method="post" action="{% url 'chat:room_detail' 'support' %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-warning">Chat with Support</button>
+        <br><br>
+      </form>
+      <form method="post" action="{% url 'chat:room_detail' 'faq' %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-info">FAQs</button><br><br>
+      </form>
+  </div>
+</div>
+<div class="chat-overlay" id="chat-overlay"></div>
+
+
+
+{% endblock content %}
+
+{% block inline_javascript %}
+<script>
+const chatIcon = document.getElementById('chat-icon');
+const chatbotContainer = document.getElementById('chatbot-container');
+const chatOverlay = document.getElementById('chat-overlay');
+const closeBtn = chatbotContainer.querySelector('.close-btn');
+
+
+// Show the chatbot container and overlay when the chat icon is clicked
+chatIcon.addEventListener('click', function() {
+  chatbotContainer.style.display = 'block';
+  chatOverlay.style.display = 'block';
+});
+
+// Hide the chatbot container and overlay when the close button is clicked
+closeBtn.addEventListener('click', function() {
+  chatbotContainer.style.display = 'none';
+  chatOverlay.style.display = 'none';
+});
+
+// Hide the chatbot container and overlay when the overlay is clicked outside the container
+chatOverlay.addEventListener('click', function(event) {
+  if (event.target === chatOverlay) {
+    chatbotContainer.style.display = 'none';
+    chatOverlay.style.display = 'none';
+  }
+});
+
+</script>
+{% endblock inline_javascript %}

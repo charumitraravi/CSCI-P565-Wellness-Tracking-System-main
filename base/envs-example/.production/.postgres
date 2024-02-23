@@ -1,0 +1,6 @@
+POSTGRES_HOST={host}
+POSTGRES_PORT={port}
+POSTGRES_DB={database_name}
+POSTGRES_USER={user_name}
+POSTGRES_PASSWORD={password}
+DATABASE_URL=postgres://{username}:{password}@{host}:{port}/{db_name}

@@ -1,0 +1,17 @@
+{% extends "account/base.html" %}
+
+{% load static %}
+{% load compress %}
+{% load i18n %}
+
+{% block head_title %}{% translate "Sign Up Closed" %}{% endblock %}
+
+{% block customcss %}
+<link href="{% static 'css/error403.css' %}" rel="stylesheet">
+{% endblock customcss %}
+
+{% block inner %}
+<h1>{% translate "Sign Up Closed" %}</h1>
+
+<p>{% translate "We are sorry, but the sign up is currently closed." %}</p>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load static %}
+{% load account %}
+{% load compress %}
+
+{% block head_title %}{% translate "Sign Out" %}{% endblock %}
+
+
+{% block customcss %}
+<link href="{% static 'css/email_confirm.css' %}" rel="stylesheet">
+{% endblock customcss %}
+
+{% block inner %}
+<br><br><br><br><br>
+<h1>{% translate "Sign Out" %}</h1>
+
+<p>{% translate 'Are you sure you want to sign out?' %}</p>
+
+<form method="post" action="{% url 'account_logout' %}">
+  {% csrf_token %}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+  {% endif %}
+  <br><br>
+  <button class="btn btn-danger" type="submit">{% translate 'Sign Out' %}</button>
+</form>
+{% endblock %}

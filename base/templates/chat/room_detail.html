@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load compress %}
+
+{% block title %}HealthTrack365 Chat Support | {{room.name}}{% endblock title %}
+
+{% block customcss %}
+<link href="{% static 'css/signin_style.css' %}" rel="stylesheet">
+<link href="{% static 'css/chatbox.css' %}" rel="stylesheet">
+{% endblock customcss %}
+
+{% block content %}
+<div class="container">
+  <div class="columns is-flex">
+    <div class="column sidebar is-align-items-center">
+      <div>
+        <br><br><br><br>
+        <h2 class="title">{{room.name}}</h2>
+        <p class="subtitle">
+          {{room.description}}
+        </p>
+      </div>
+    </div>
+
+    <div class="column is-three-quarters">
+      <section>
+        <div id="messages"></div>
+        <form id="message-form">
+          <div class="field">
+            <label class="label">Message</label>
+            <div class="control">
+              <textarea class="textarea" id="message-input"
+                        placeholder="Your message here" rows="3"
+                        autofocus></textarea>
+            </div>
+          </div>
+          <button type="submit" class="button">Send</button>
+        </form>
+      </section>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block page_specific_js %}
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        crossorigin="anonymous"></script>
+<script src="{% static 'js/chat/rooms.js' %}"></script>
+{% endblock page_specific_js %}
